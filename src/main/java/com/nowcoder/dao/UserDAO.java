@@ -14,12 +14,16 @@ public interface UserDAO {
     String INSET_FIELDS = " name, password, salt, head_url ";
     String SELECT_FIELDS = " id, name, password, salt, head_url";
 
-    //
 
+    //这个在我看来属实是一种怪异的写法。这个写法的意思应该就是运转了上面的@Insert后面的脚本，
+    // 如果外人想要召唤这个脚本，开始使用他，那么就需要呼唤他作为一个method的名字，那就是addUser
+    //脚本里面的这些value的名字，我姑且认为都是干脆直接等同于object的定义中的field的名字。
+    //以及这里要注意一件事，那就是变量注定是被#{}给括起来的。
     @Insert({"insert into ", TABLE_NAME, "(", INSET_FIELDS,
             ") values (#{name},#{password},#{salt},#{headUrl})"})
     int addUser(User user);
 
+    //接下来就又是很自然的Select，各种Select。
     @Select({"select ", SELECT_FIELDS, " from ", TABLE_NAME, " where id=#{id}"})
     User selectById(int id);
 
