@@ -20,6 +20,7 @@ import java.util.Random;
 @RunWith(SpringJUnit4ClassRunner.class)
 @SpringApplicationConfiguration(classes = ToutiaoApplication.class)
 @Sql("/init-schema.sql")
+//上面的这个@sql意味着就是，在跑下面的test之前，先执行这个.sql文件里面的脚本。
 public class InitDatabaseTests {
     @Autowired
     UserDAO userDAO;
@@ -35,7 +36,9 @@ public class InitDatabaseTests {
         Random random = new Random();
         for (int i = 0; i < 11; ++i) {
             User user = new User();
+            //设置头像
             user.setHeadUrl(String.format("http://images.nowcoder.com/head/%dt.png", random.nextInt(1000)));
+            //设置名字
             user.setName(String.format("USER%d", i));
             user.setPassword("");
             user.setSalt("");

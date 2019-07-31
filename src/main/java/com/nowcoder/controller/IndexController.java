@@ -30,6 +30,7 @@ public class IndexController {
     @Autowired
     private ToutiaoService toutiaoService;
 
+    //mapping an HTTP request to a method
     @RequestMapping(path = {"/", "/index"}, method = {RequestMethod.GET, RequestMethod.POST})
     @ResponseBody
     public String index(HttpSession session) {
