@@ -23,6 +23,9 @@ import java.util.*;
 /**
  * Created by nowcoder on 2016/6/26.
  */
+/**
+本质上来说，这个java文件里面提到的事情，都是对应用户请求的不同界面来进行返回response，其中可以选择机械化模板返回，也可以使用自定义.vm返回。
+ */
 //@Controller
 public class IndexController {
     private static final Logger logger = LoggerFactory.getLogger(IndexController.class);
@@ -41,17 +44,21 @@ public class IndexController {
                 + "<br> Say:" + toutiaoService.say();
     }
 
+    //这里的groupId和userId都是变量，之后可以有办法和他联动。
     @RequestMapping(value = {"/profile/{groupId}/{userId}"})
     @ResponseBody
     public String profile(@PathVariable("groupId") String groupId,
                           @PathVariable("userId") int userId,
+                          //这里后面request返回的参数，就是链接里面?之后的东西，谁=几这样子的。
                           @RequestParam(value = "type", defaultValue = "1") int type,
                           @RequestParam(value = "key", defaultValue = "nowcoder") String key) {
+        //可以return出来上面我们标号的variable
         return String.format("GID{%s},UID{%d},TYPE{%d},KEY{%s}", groupId, userId, type, key);
     }
 
     @RequestMapping(value = {"/vm"})
     public String news(Model model) {
+        //这个model的意思啊，就是这是个后端和前端渲染之间可以相互联系的一个桥梁。
         model.addAttribute("value1", "vv1");
         List<String> colors = Arrays.asList(new String[]{"RED", "GREEN", "BLUE"});
 
@@ -64,6 +71,8 @@ public class IndexController {
         model.addAttribute("map", map);
         model.addAttribute("user", new User("Jim"));
 
+        //这里这个return “news”，他会自动去templates里面找哪里有一个叫news.vm的一个文件。
+        //.vm文件一般我们称呼他为模板文件。
         return "news";
     }
 
@@ -74,11 +83,14 @@ public class IndexController {
                           HttpSession session) {
         StringBuilder sb = new StringBuilder();
         Enumeration<String> headerNames = request.getHeaderNames();
+        //用while读取全部header，比如什么host,connection,accept,user-agent什么的，甚至还有一个cookie的sessionID。
         while (headerNames.hasMoreElements()) {
             String name = headerNames.nextElement();
+            //然后全部加入到我们最开始建立的StringBuilder之中了
             sb.append(name + ":" + request.getHeader(name) + "<br>");
         }
 
+        //接下来，认真地把全部的cookie都摸出来。但这个例子里面是只有一个cookie拉，所以和上面的里面的cookie没差。
         for (Cookie cookie : request.getCookies()) {
             sb.append("Cookie:");
             sb.append(cookie.getName());
@@ -89,15 +101,20 @@ public class IndexController {
 
         sb.append("getMethod:" + request.getMethod() + "<br>");
         sb.append("getPathInfo:" + request.getPathInfo() + "<br>");
+        //？后面的就是queryString
         sb.append("getQueryString:" + request.getQueryString() + "<br>");
+        //从服务器根目录以后的都是URI
         sb.append("getRequestURI:" + request.getRequestURI() + "<br>");
 
         return sb.toString();
 
     }
 
+    //写一个单独的method来往response里面加东西。
     @RequestMapping(value = {"/response"})
     @ResponseBody
+    //在这里，不要怀疑，response的后面括号里面方的依然是传进来的东西，别想别的。包括response，也是一个穿进来的东西。
+    //而我们的任务，就是把我们要改的东西都改好，然后给他传回去。包括下发新的cookie。
     public String response(@CookieValue(value = "nowcoderid", defaultValue = "a") String nowcoderId,
                            @RequestParam(value = "key", defaultValue = "key") String key,
                            @RequestParam(value = "value", defaultValue = "value") String value,

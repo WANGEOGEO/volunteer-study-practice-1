@@ -6,3 +6,5 @@ static里面放的是我们所需要的全部静态资源，比如说js脚本和
 DAO就是Data access object，是主要用来访问数据库用的代码。
 Service层就是来使用DAO去做操作。
 Controler负责请求转发，接受页面过来的参数，传给Service处理，接到返回值，再传给页面。
+如果我们希望不是返回一个自动生成的RequestBody，而是希望返回一个我们写好的html，那么可以把这个页面在templates里面写好。
+

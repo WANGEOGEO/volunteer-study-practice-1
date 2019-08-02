@@ -9,10 +9,16 @@ Hello VM.
 这里都看不到
 *#
 
+#*
+美元符号加感叹号就可以让他显示出来
+加了叹号的，就是如果后面的那个变量发现是不存在的，就不会显示出来。
+如果是只是美元符号，那么抱歉，没啥特殊效果，这一行会被当作普通文本处理，包括美元符号。
+*#
 value1:$!{value1}
 $!{value2}
 ${value3}
 
+##接下来的就是普通的for循环，轻松解决了。这里要习惯这种打印文本混着操作的写法。
 #foreach ($color in $colors)
 Color $!{foreach.index}/$!{foreach.count}: $!{color}
 #end
@@ -25,22 +31,33 @@ Number $!{foreach.index}/$!{foreach.count}: $!{key} $map.get($key)
 Number $!{foreach.index}/$!{foreach.count}: $!{kv.key} $!{kv.value}
 #end
 
-
+##面对对象在这里也可以正常使用，本质上和Java一毛一样。
+##.name这个东西一用，他会自己去找是不是存在getName(), getname()啥的，很good。
 User:$!{user.name}
 User:$!{user.getName()}
 
+
+##运用了一个包含的概念，可以被用来机械化生成footer，title啥的，把其它地方的东西拉过来。
+##比如，接下来就把header.vm给包含进来了。
+##先定义有一个叫做title的变量。
 #set($title = "nowcoder")
+## 直接把刚才那个文件包含进来，接下来这两行都在干这同一件事。 井号后面的才是命令，前面的Include和Parse都只是文本而以。
+## Include和Parse的区别就是，Include只是单纯地把文本包括进来了，然而Parse不止把文本包括进来，如果他发现包括进来的文本里有对应的变量数值，那就需要更改称对应数值
+## 在这个例子中，对于的变量就是title。Include并没有是的引入的文本发生变化，而Parser则把变量titile直接赋值给了他要Parse进来的春文本，十分的有意思嗷。
 Include: #include("header.vm") <br>
 Parse:#parse("header.vm")
 
+##render_color是Macro的名字，color和index是变量。
 #macro (render_color, $color, $index)
 Color By Macro $index, $color
 #end
 
+##这个foreach.index似乎就是目前这个foreach进行到第几个了这么个意思，十分方便。
 #foreach ($color in $colors)
     #render_color($color, $foreach.index)
 #end
 
+##只有双引号里面的东西，变量名会被解析。单引号里面就是纯文本，不会有更多解析。
 #set($hello = "hello")
 #set($hworld1 = "$!{hello} world")
 #set($hworld2 = '$!{hello} world')
