@@ -1,0 +1,8 @@
+实在是前面的东西忘的差不多了，我决定还是写个readme来注意一下。
+从项目的整体思路上来说，java文件夹里面写的是java代码，
+static里面放的是我们所需要的全部静态资源，比如说js脚本和css脚本。
+最简单的服务器有四层结构：从上到下，Controller，Service，DAO，Database。
+所有的我们需要存储的数据，都存放在最下层的Database之中。
+DAO就是Data access object，是主要用来访问数据库用的代码。
+Service层就是来使用DAO去做操作。
+Controler负责请求转发，接受页面过来的参数，传给Service处理，接到返回值，再传给页面。

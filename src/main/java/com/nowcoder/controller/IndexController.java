@@ -31,7 +31,9 @@ public class IndexController {
     private ToutiaoService toutiaoService;
 
     //mapping an HTTP request to a method
+    //path可以支持多个变量
     @RequestMapping(path = {"/", "/index"}, method = {RequestMethod.GET, RequestMethod.POST})
+    //因为返回的是一个string，所以我还要告诉他返回的是一个body
     @ResponseBody
     public String index(HttpSession session) {
         logger.info("Visit Index");
