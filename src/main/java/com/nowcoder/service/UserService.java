@@ -25,6 +25,7 @@ public class UserService {
     @Autowired
     private LoginTicketDAO loginTicketDAO;
 
+    //
     public Map<String, Object> register(String username, String password) {
         Map<String, Object> map = new HashMap<String, Object>();
         if (StringUtils.isBlank(username)) {
@@ -39,17 +40,22 @@ public class UserService {
 
         User user = userDAO.selectByName(username);
 
+        //如果根据已有的名字会搜到一个user，那么就可得这个username已经被人注册了。
         if (user != null) {
             map.put("msgname", "用户名已经被注册");
             return map;
         }
 
         // 密码强度
+        //接下来开始创建一个新的User
         user = new User();
         user.setName(username);
+        //这个Salt是用安全考虑。
         user.setSalt(UUID.randomUUID().toString().substring(0, 5));
+        //这个head就是头像。
         String head = String.format("http://images.nowcoder.com/head/%dt.png", new Random().nextInt(1000));
         user.setHeadUrl(head);
+        //这个password的生成需要上面的salt值，这样可以让加密更加的安全，而不是被一下就逆运算出来。
         user.setPassword(ToutiaoUtil.MD5(password+user.getSalt()));
         userDAO.addUser(user);
 

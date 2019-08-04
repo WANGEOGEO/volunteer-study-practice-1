@@ -28,8 +28,11 @@ import java.util.*;
  */
 //@Controller
 public class IndexController {
+    //logger就是用来记录的。
     private static final Logger logger = LoggerFactory.getLogger(IndexController.class);
 
+    //autowired的意思就是，每次只要系统启动，就会有这么一个东西被创建好，并且赋值到这个成员函数上。
+    //本质上这个Autowired关键字起到的是一个注入的效果。类与类之间并没有继承，只有互相使用。
     @Autowired
     private ToutiaoService toutiaoService;
 
@@ -39,7 +42,9 @@ public class IndexController {
     //因为返回的是一个string，所以我还要告诉他返回的是一个body
     @ResponseBody
     public String index(HttpSession session) {
+        //往logger里面加东西。
         logger.info("Visit Index");
+        //把Session中的msg这个attribute取了出来。这个原本是楼下那个redirect拿来演示用的。
         return "Hello NowCoder," + session.getAttribute("msg")
                 + "<br> Say:" + toutiaoService.say();
     }
@@ -124,15 +129,18 @@ public class IndexController {
         return "NowCoderId From Cookie:" + nowcoderId;
     }
 
+    //这里有提到一个301和302的区别，301是永久重定向跳转，浏览器跳过一次之后，就会记住下次也要跳，下次再访问这个页面，直接会跳到重定向页面。302的话不是。
     @RequestMapping("/redirect/{code}")
     public String redirect(@PathVariable("code") int code,
                            HttpSession session) {
+        //注释里面的也是一种写法，比较直观。
         /*
         RedirectView red = new RedirectView("/", true);
         if (code == 301) {
             red.setStatusCode(HttpStatus.MOVED_PERMANENTLY);
         }
         return red;*/
+        //下面这个写法，redirect：是一个固定前缀，可以触发跳转。这个办法写的话，全部都是302跳转。
         session.setAttribute("msg", "Jump from redirect.");
         return "redirect:/";
     }
@@ -146,6 +154,7 @@ public class IndexController {
         throw new IllegalArgumentException("Key 错误");
     }
 
+    //自己定义了一个Exception Handler
     @ExceptionHandler()
     @ResponseBody
     public String error(Exception e) {

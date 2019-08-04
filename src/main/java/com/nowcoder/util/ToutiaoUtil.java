@@ -11,6 +11,10 @@ import java.util.Map;
 /**
  * Created by nowcoder on 2016/7/3.
  */
+
+/**
+ * 这部分的代码就是用来搞MD5的。
+ */
 public class ToutiaoUtil {
     private static final Logger logger = LoggerFactory.getLogger(ToutiaoUtil.class);
 
